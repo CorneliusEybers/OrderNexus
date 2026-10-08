@@ -426,3 +426,63 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+# ============================================================================
+# OrderNexus - Angular / Node.js (frontend)
+# ============================================================================
+# Dependencies and local package manager caches
+**/node_modules/
+**/.npm/
+**/.pnpm-store/
+
+# Angular build, compiler cache and test outputs
+**/dist/
+**/.angular/
+**/coverage/
+**/.nyc_output/
+**/*.tsbuildinfo
+
+# Frontend tooling logs and temporary output
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+**/.eslintcache
+**/.cache/
+
+# Keep package.json, package-lock.json, angular.json, tsconfig files,
+# application source, and Angular environment source files in Git.
+
+# ============================================================================
+# OrderNexus - SQLite (backend local runtime data)
+# ============================================================================
+# Local database files and SQLite journal / write-ahead-log sidecars
+*.db
+*.db3
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Keep EF Core migrations, model configuration and seed code in Git.
+
+# ============================================================================
+# OrderNexus - Local-only configuration and operating-system files
+# ============================================================================
+.env.local
+.env.*.local
+!.env.example
+!.env.template
+
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Keep README.md, SOLUTION.md, .gitignore and shared editor settings in Git.

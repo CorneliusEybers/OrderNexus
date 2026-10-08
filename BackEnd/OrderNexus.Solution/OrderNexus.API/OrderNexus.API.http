@@ -1,0 +1,6 @@
+@OrderNexus.API_HostAddress = http://localhost:5149
+
+GET {{OrderNexus.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
