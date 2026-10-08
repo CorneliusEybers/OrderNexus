@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using OrderNexus.Infrastructure;
 using OrderNexus.Infrastructure.Persistence;
 using OrderNexus.Infrastructure.Persistence.Seeding;
+using OrderNexus.Application.Services;
+using OrderNexus.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,11 +42,21 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddInfrastructure(sqliteConnectionBuilder.ToString());
 
+builder.Services.AddScoped<OrderService>();
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+
 // ---------------------------------------------------------
 // Application
 // ---------------------------------------------------------
 
 var app = builder.Build();
+
+// ---------------------------------------------------------
+// Centralized exception handling
+// ---------------------------------------------------------
+app.UseExceptionHandler();
 
 // ---------------------------------------------------------
 // Database initialization
@@ -68,6 +80,12 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.UseSwaggerUI(options => {
+                                    options.SwaggerEndpoint("/openapi/v1.json", "OrderNexus API v1");
+
+                                    options.RoutePrefix = "swagger";
+                                });
 }
 
 app.UseHttpsRedirection();

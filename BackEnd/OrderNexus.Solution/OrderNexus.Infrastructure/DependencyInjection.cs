@@ -1,7 +1,9 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using OrderNexus.Application.Interfaces;
 using OrderNexus.Infrastructure.Persistence;
+using OrderNexus.Infrastructure.Repositories;
 
 namespace OrderNexus.Infrastructure
 {
@@ -28,6 +30,8 @@ namespace OrderNexus.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<OrderNexusDbContext>(options => options.UseSqlite(connectionString));
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ILookupRepository, LookupRepository>();
 
             return services;
         }
