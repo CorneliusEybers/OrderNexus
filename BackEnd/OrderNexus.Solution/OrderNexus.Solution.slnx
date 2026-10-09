@@ -1,3 +1,7 @@
 <Solution>
   <Project Path="OrderNexus.API/OrderNexus.API.csproj" />
+  <Project Path="OrderNexus.Application/OrderNexus.Application.csproj" />
+  <Project Path="OrderNexus.Domain/OrderNexus.Domain.csproj" />
+  <Project Path="OrderNexus.Infrastructure/OrderNexus.Infrastructure.csproj" />
+  <Project Path="OrderNexus.Tests/OrderNexus.Tests.csproj" />
 </Solution>
