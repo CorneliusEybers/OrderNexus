@@ -1,0 +1,145 @@
+Technical Assessment LexiNexis
+TechAssessLexiNexis
+
+Scrum Tasks:
+============
+000 Application Creation
+000 Application Architecture
+001 Runnable vertical slice
+002 Complete business rules
+003 Complete Angular experience
+004 Tests and hardening
+005 Submission and presentation
+
+Scrum Task Cycle:
+=================
+main -> branch -> implement -> test -> commit(PR) -> merge into main -> pull main
+
+GIT:
+====
+Branch: 001-Runnable-vertical-slice
+Commits: Initial commit
+         000 Application Creation Done
+         Entities/Objects created in the Domain layer
+	 Entity Configurations done
+	 SQLite implemented and TakeOnData Done
+         API BackEnd completed
+         Angular Front-End and basic Unit-Tests done
+Pull Request: https://github.com/CorneliusEybers/OrderNexus/pull/1
+
+Branch:
+Commits:
+Pull Request:
+
+Migrations:
+===========
+Add-Migration InitialCreate -Context OrderNexusDbContext -Project OrderNexus.Infrastructure -StartupProject OrderNexus.API -OutputDir Persistence\Migrations
+Update-Database -Context OrderNexusDbContext -Project OrderNexus.Infrastructure -StartupProject OrderNexus.API
+
+Run Angular UI:
+===============
+npm start -- --proxy-config proxy.conf.json
+http://localhost:4200
+
+Notes and Decisions:
+====================
+Getting Started:
+----------------
+- My SOP to jump in that I follow every day in my work is the same as
+  what I share in this readme file. Every task on my board I do in
+  the way displayed in this readme.
+- I start every task in its own folder on my local 
+  all task folders are held together in the Workitems folder.
+- Every task starts with a text file like this called Investigate.txt
+- Before every task/story I do a small technical assessment to 
+  investigate technically what is already there and how does the new 
+  requirement fit into the existing system.
+- I also create a SQL file called Investigate.sql where I do the queries
+  to see how the data looks on the database before the changes
+
+Database Design:
+----------------
+- I decided to use Entity Framework as my Object Related model
+- I decided to use code-first with take-on data and migrations
+  This help you to spin up without an initial DB
+- All primary keys of all tables will be named Id
+- All table names to be in singular
+- All foreign keys prefixed with full/exact  referenced table name plus "Id"
+  Foreignkeys names TableName + Id
+- Core tables identified from the spec
+  ~ Order
+  ~ OrderItem
+  ~ OrderStatus
+  ~ Item
+  ~ Currency
+  ~ SalesRep
+- Regarding Items.
+  ~ It is not in the scope to CRUD Items
+  ~ I will populate the Item table with 5 items
+  ~ This to ensure the Angular UI is not cumbersome
+    for the user to type in every item name.
+  ~ On item selection the Item-Unit-Price at that point in time
+    will be used as the OrderItem-Unit-Price to keep the
+    price as at order creation in case the price fluctuates
+    in the back ground after the order is captured.
+
+Application Creation:
+---------------------
+- I chose the name for the application as OrderNexus.
+  It is a short easy name to for people to use and remember.
+  Nexus comes from Latin and means a connection, binding, link, or joining together...
+  a central connection point between several things.
+  OrderNexus communicates the idea of 
+  bringing customers, sales representatives, products, and orders 
+  together into one coordinated system.
+  OrderNexus has a natural phonetic resemblance to LexisNexis, without copying its exact name.
+
+Application Architecture:
+-------------------------
+OrderNexus.API - Exposes the REST API endpoints and handles incoming HTTP requests/responses.
+               - References: OrderNexus.Application, OrderNexus.Domain, OrderNexus.Infrastructure
+OrderNexus.Application - Contains application use cases, business workflows, and service orchestration.
+                       - References: OrderNexus.Domain
+OrderNexus.Domain - Contains the core business entities, enums, rules, and domain behaviour.
+                  - References: None
+OrderNexus.Infrastructure - Contains external integrations, in-memory persistence, and technical implementations.
+                          - References: OrderNexus.Application, OrderNexus.Domain
+OrderNexus.Tests - Contains automated tests for critical business rules and application behaviour.
+                 - References: OrderNexus.Application, OrderNexus.Domain
+
+Runnable vertical slice:
+------------------------
+- For this assessment I am going to focus on Order Creation with OrderItem and Item selection
+  I will do CRUD for Order and OrderItem in as-much-as creating and order with line items.
+  No CRUD for Items(Product) will have TakeOnData for these items to be selectable
+  No CRUD for Currency will have TakeOnData for these items to be selectable
+  No CRUD for Order Status will have TakeOnData for these items to be selectable
+  No CRUD for Sales Reps will have TakeOnData for these items to be selectable
+  No CRUD for Customers will have TakeOnData for these items to be selectable
+- Creating, editing or deleting submitted orders must respect the business rules.
+- OrderItems will be managed through the Order aggregate, 
+  not through an independent controller permitting unrestricted changes.
+- Data will be stored in SQLite via EF Core.
+- Fluent API configuration discovery
+- We will implement automatic UTC timestamp assignment
+- Item that can be placed into an Order as a n OrderItem
+  ~ Every product requires a unique SKU.
+  ~ A catalogue price cannot be negative.
+  ~ UnitPrice is stored as a SQLite INTEGER.
+  ~ A product referenced by an order cannot be 
+    deleted through cascading relationships.
+- Order Duplicate prevention
+  ~ The unique index on CustomerId + ExternalReference ensures that 
+    SQLite cannot store two orders with the same reference for the same customer.
+  ~ Application service will first look for an existing submission and 
+    decide whether to return the existing order or respond with 409 Conflict.
+  ~ The database unique index is our final protection against concurrent requests. 
+    Catch unique-constraint failures appropriately
+    NOT allowing them to surface as HTTP 500 errors.
+  ~ Normalize references consistently before saving, 
+    so variations in surrounding whitespace or letter 
+    casing don't accidentally evade our chosen duplicate policy.
+  ~ CreatedBy and UpdatedBy remain nullable for now. 
+    When we eventually introduce authentication, 
+    we could populate them from the authenticated user. 
+    Authentication is outside this assessment's scope.
