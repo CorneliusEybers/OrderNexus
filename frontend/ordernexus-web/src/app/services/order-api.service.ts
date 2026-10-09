@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {
-    CurrencyLookup, ItemLookup, Lookup, OrderRequest,
-    OrderResponse, StatusLookup
-} from '../models/order.models';
+import { CurrencyLookup, ItemLookup, 
+         Lookup, OrderRequest,
+         OrderResponse, StatusLookup } from '../models/order.models';
 
 @Injectable({ providedIn: 'root' })
 export class OrderApiService {
