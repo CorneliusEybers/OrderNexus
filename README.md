@@ -181,3 +181,15 @@ calculated rather than stored.
 Customer and lookup data are 
 deliberately read-only in the assessment interface.
 See 'SOLUTION.md' for architecture decisions, constraints, and trade-offs.
+
+Development Notes:
+------------------
+- Please look at the text file called Investigate.txt
+  This file is the backbone of SOP for every tas from my scrumboard
+- It shows the small tech-analysis and keeping track
+  of branching and commits as the task progress continues.
+- Please view the paper Database design
+  translated into a full fledged ERD.
+  This is a quick design I do while reading the specification
+  to map out the Entities and future DB-Tables
+- Please view the paper screen designs
